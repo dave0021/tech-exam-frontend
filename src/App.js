@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import './App.css';
 
+import { Modal } from 'bootstrap';
+
 function App() {
   const [id, setId] = useState()
 
@@ -25,8 +27,6 @@ function App() {
 
   useEffect(() => {
     fetchMembers()
-
-    console.log(members)
   }, [])
 
   const fetchMembers = () => {
@@ -51,13 +51,11 @@ function App() {
   }
 
   const openModal = (mode, data = {}) => {
-    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
-      keyboard: false
-    })
+    let myModal = new Modal(document.getElementById('myModal'))
 
     setMode(mode)
 
-    if (mode == 'Update') {
+    if (mode === 'Update') {
       setId(data.id)
       setFirstname(data.first_name)
       setMiddlename(data.middle_name)
@@ -84,11 +82,11 @@ function App() {
       contact_number: contact
     }
 
-    if (mode == 'Update') {
+    if (mode === 'Update') {
       params['id'] = id
     }
 
-    axios.post(`http://localhost:5000/api/family/${mode == 'Add' ? 'add' : 'update'}`, params)
+    axios.post(`http://localhost:5000/api/family/${mode === 'Add' ? 'add' : 'update'}`, params)
       .then(({data}) => {
         if (data.S) {
           alert(data.M)
@@ -169,7 +167,11 @@ function App() {
                     </div>
 
                     <div className='col-xl-4'>
-                      <input id="gender" className='form-control' placeholder='Gender' required onChange={(e) => setGender(e.target.value)} value={gender || ''}/>
+                      <select id="gender" className='form-control' required onChange={(e) => setGender(e.target.value)} value={gender || ''}>
+                        <option value='' disabled>--Choose Gender--</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
                     </div>
 
                     <div className='col-xl-4'>
